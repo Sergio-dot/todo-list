@@ -1,0 +1,27 @@
+version: '3'
+volumes:
+  data:
+services:
+  # MariaDB
+  db:
+    image: mariadb
+    container_name: 'mariadb'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
