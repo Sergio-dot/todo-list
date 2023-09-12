@@ -22,7 +22,7 @@ app.get('/users', async (req, res) => {
     conn = await pool.getConnection();
 
     // query
-    var query = 'select * from users';
+    var query = 'select * from user';
 
     // execute the query
     var rows = await conn.query(query);
