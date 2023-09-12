@@ -19,6 +19,14 @@ services:
       - data:/var/lib/mysql
     ports:
       - '3306:3306'
+  # Redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks:
+      - todo-app-network
+    ports:
+      - '6379:6379'
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
@@ -48,3 +56,4 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - redis
