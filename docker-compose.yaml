@@ -2,11 +2,12 @@ version: '3'
 networks:
   todo-app-network:
 volumes:
-  data:
+  mariadb_data:
+  redis_data:
 services:
   # MariaDB
   db:
-    image: mariadb
+    image: mariadb:latest
     container_name: 'mariadb'
     networks:
       - todo-app-network
@@ -16,7 +17,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     ports:
       - '3306:3306'
   # Redis
@@ -25,8 +26,12 @@ services:
     container_name: redis
     networks:
       - todo-app-network
+    environment:
+      REDIS_URL: ${REDIS_URL}
     ports:
       - '6379:6379'
+    volumes:
+      - redis_data:/data
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
@@ -46,13 +51,13 @@ services:
     networks:
       - todo-app-network
     environment:
-      - PORT=${PORT}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      SERVER_PORT: ${SERVER_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - '${PORT}:${PORT}'
+      - '${SERVER_PORT}:${SERVER_PORT}'
     depends_on:
       - db
       - rabbitmq
