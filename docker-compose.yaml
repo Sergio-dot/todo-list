@@ -25,3 +25,18 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq/
+  #Application
+  todo-app:
+    image: sergiodot/todo-app:1.0
+    container_name: todo-app
+    environment:
+      - PORT=${PORT}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - db
+      - rabbitmq
