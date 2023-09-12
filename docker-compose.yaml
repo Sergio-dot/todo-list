@@ -1,4 +1,6 @@
 version: '3'
+networks:
+  todo-app-network:
 volumes:
   data:
 services:
@@ -6,6 +8,8 @@ services:
   db:
     image: mariadb
     container_name: 'mariadb'
+    networks:
+      - todo-app-network
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -19,6 +23,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: 'rabbitmq'
+    networks:
+      - todo-app-network
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -29,6 +35,8 @@ services:
   todo-app:
     image: sergiodot/todo-app:1.0
     container_name: todo-app
+    networks:
+      - todo-app-network
     environment:
       - PORT=${PORT}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
