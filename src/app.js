@@ -26,5 +26,5 @@ app.use('/v1/user', user_routes);
 
 // Start web server
 app.listen(port, () => {
-  console.log(`Server running on port ${process.env.SERVER_PORT}`);
+  console.log(` [*] Server listening at port ${process.env.SERVER_PORT}`);
 });
