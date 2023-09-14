@@ -1,5 +1,3 @@
-const pool = require('../modules/db.module');
-
 // Modello user
 class User {
   constructor(username, password) {

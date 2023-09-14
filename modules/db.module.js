@@ -18,17 +18,25 @@ async function initDatabase() {
       `CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DATABASE}\``
     );
 
-    console.log('Database OK');
+    console.log(' [-] Configuring database...');
 
     await conn.query(`USE \`${process.env.MYSQL_DATABASE}\``);
 
+    console.log(' [*] Database configured');
+
+    console.log(' [-] Configuring tables...');
     // Create tables
     await conn.query(`CREATE TABLE IF NOT EXISTS \`user\` (
       \`id\` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       \`username\` VARCHAR(255) NOT NULL UNIQUE,
       \`password\` VARCHAR(255) NOT NULL
     )`);
-    console.log('Tables OK');
+    await conn.query(`CREATE TABLE IF NOT EXISTS \`item\` (
+      \`id\` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      \`title\` VARCHAR(255) NOT NULL,
+      \`description\` VARCHAR(255)
+    )`);
+    console.log(' [*] Tables configured');
   } catch (err) {
     console.error('Database initialization error: ', err);
   } finally {

@@ -5,12 +5,12 @@ const client = redis.createClient({
   url: process.env.REDIS_URL || 'redis://localhost:6379',
 });
 
-console.log('RedisURL: ', process.env.REDIS_URL);
+console.log(' [-] Connecting to Redis...');
 
 client.connect();
 
 client.on('connect', function () {
-  console.log('Redis client connected');
+  console.log(' [*] Redis client connected at: ', process.env.REDIS_URL);
 });
 
 module.exports = client;
