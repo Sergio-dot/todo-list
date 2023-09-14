@@ -1,11 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home page</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <style>
+      /* Custom CSS for section separation */
+      .add-item-section {
+        background-color: #f0f0f0; /* Light gray background */
+        padding: 20px;
+        border: 1px solid #ccc; /* Gray border */
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+
+      .list-items-section {
+        background-color: #f0f0f0; /* Light gray background */
+        padding: 20px;
+        border: 1px solid #ccc; /* Gray border */
+        border-radius: 5px;
+      }
+    </style>
+    <title>Todo App</title>
   </head>
   <body>
-    <h1>Home page</h1>
+    <div class="container">
+      <h1 class="mt-4">Todo List</h1>
+      <div class="add-item-section">
+        <h2>Add New Todo Item</h2>
+        <form action="/v1/user/add" method="post" class="mb-4">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input
+              type="text"
+              name="title"
+              class="form-control"
+              id="title"
+              placeholder="New Todo"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label"
+              >Description (optional)</label
+            >
+            <input
+              type="text"
+              name="description"
+              class="form-control"
+              id="description"
+              placeholder="Description"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+      <div class="list-items-section">
+        <h2>Todo List</h2>
+        <ul class="list-group">
+          <% items.forEach(item => { %>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <%= item.title %> -
+                <span
+                  class="<%= item.completed ? 'text-success' : 'text-danger' %>"
+                  ><%= item.completed ? 'Completed' : 'Pending' %></span
+                >
+                <!-- Display the description -->
+                <div class="item-description">
+                  Description: <%= item.description %>
+                </div>
+              </div>
+              <div class="btn-group">
+                <a href="/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
+                <a href="/delete/<%= item.id %>" class="btn btn-danger"
+                  >Delete</a
+                >
+                <a href="/complete/<%= item.id %>" class="btn btn-success"
+                  ><%= item.completed ? 'Unmark' : 'Mark' %></a
+                >
+              </div>
+            </div>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      // JavaScript to handle the form submission
+      $(document).ready(function () {
+        $('form').submit(function (event) {
+          event.preventDefault(); // Prevent the default form submission
+
+          const formData = {
+            title: $('#title').val(),
+            description: $('#description').val(),
+          };
+
+          $.ajax({
+            type: 'POST',
+            url: '/v1/user/add',
+            data: JSON.stringify(formData), // Convert data to JSON
+            contentType: 'application/json', // Set content type to JSON
+            success: function (response) {
+              console.log(response); // Handle the server's response
+              if (response.redirectTo) {
+                // Redirect to the specified URL
+                window.location.href = response.redirectTo;
+              }
+            },
+          });
+        });
+      });
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
