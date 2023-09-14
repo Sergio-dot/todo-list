@@ -1,0 +1,31 @@
+require('dotenv').config();
+const amqp = require('amqplib');
+
+async function publishItemToQueue(item) {
+  const queueName = 'itemQueue';
+
+  try {
+    // Establish connection with RabbitMQ
+    const connection = await amqp.connect('amqp://rabbitmq:5672');
+
+    // Create channel
+    const channel = await connection.createChannel();
+
+    // Assert queue
+    await channel.assertQueue(queueName, { durable: false });
+
+    // Send the item object as JSON to the queue
+    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(item)));
+    console.log(`Item sent to RabbitMQ: ${JSON.stringify(item)}`);
+
+    // Close connection
+    await channel.close();
+    await connection.close();
+  } catch (error) {
+    console.error('Error while sending item to queue: ', error);
+  }
+}
+
+module.exports = {
+  publishItemToQueue,
+};
