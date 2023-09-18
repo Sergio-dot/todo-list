@@ -35,17 +35,34 @@ describe('Todo App', () => {
     cy.get('.list-group-item').contains('Play World of Warcraft - Pending');
   });
 
+  it('should edit a todo item', () => {
+    // Locate item to edit
+    cy.get('.list-group-item')
+      .contains('Play World of Warcraft')
+      .parent()
+      .find('.btn-info')
+      .click();
+
+    cy.get('input[name="newTitle"]').clear().type('World of Warcraft');
+    cy.get('input[name="newDescription"]')
+      .clear()
+      .type('Group up for the raid');
+    cy.get('button[type="submit"]').click();
+    cy.contains('World of Warcraft').should('exist');
+    cy.contains('Group up for the raid').should('exist');
+  });
+
   it('should delete a todo item', () => {
     // Locate specific item to delete
     cy.get('.list-group-item')
-      .contains('Play World of Warcraft')
+      .contains('World of Warcraft')
       .parent()
       .find('.btn-danger')
       .click();
 
     // After clicking the button verify that the item is deleted
     cy.get('.list-group-item')
-      .contains('Play World of Warcraft')
+      .contains('World of Warcraft')
       .should('not.exist');
   });
 });
