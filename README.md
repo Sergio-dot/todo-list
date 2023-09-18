@@ -20,4 +20,5 @@ Project built using:
 
 ## Future works
 
-- Complete authentication through JWT and session storage with Redis
+- Authentication with JWT
+- Session storage with Redis
