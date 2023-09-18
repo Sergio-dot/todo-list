@@ -25,6 +25,10 @@ const user_routes = require('../routes/user.route');
 app.use('/v1/auth', auth_routes);
 app.use('/v1/user', user_routes);
 
+app.get('/', (req, res) => {
+  res.redirect('/v1/user/');
+});
+
 // Start web server
 app.listen(port, () => {
   console.log(` [*] Server listening at port ${process.env.SERVER_PORT}`);
