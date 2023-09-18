@@ -2,14 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo ' [-] Cloning repository...'
-                checkout scm
-                echo ' [*] Done'
-            }
-        }
-
         stage('Install dependencies') {
             steps {
                 echo ' [-] Installing dependencies...'
@@ -29,10 +21,10 @@ pipeline {
 
     post {
         success {
-            echo ' [*] Success'
+            echo ' [*] Pipeline executed without errors'
         }
         failure {
-            echo ' [!] Error'
+            echo ' [!] Error while executing pipeline, check the logs'
         }
     }
 }
