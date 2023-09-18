@@ -31,7 +31,6 @@ async function consumeNewItems() {
             messageData.item.completed
           );
 
-          console.log('Received item: ', item);
           // Process the received item, saving it to database
           try {
             // Establish connection with MariaDB
@@ -53,13 +52,33 @@ async function consumeNewItems() {
           } catch (error) {
             console.log('Error while writing item to database: ', error);
           }
+        } else if (messageData.action === 'update_item') {
+          try {
+            // Establish connection with MariaDB
+            const dbConnection = await pool.getConnection();
+
+            // Prepare query statement
+            const sql =
+              'UPDATE `item` SET title = ?, description = ? WHERE id = ?';
+
+            // Execute query
+            await dbConnection.query(sql, [
+              messageData.title,
+              messageData.description,
+              messageData.itemId,
+            ]);
+
+            dbConnection.release();
+          } catch (error) {
+            console.log('Error while updating item completed status: ', error);
+          }
         } else if (messageData.action === 'delete_item') {
           try {
             // Establish connection with MariaDB
             const dbConnection = await pool.getConnection();
 
             // Prepare query statement
-            const sql = 'DELETE FROM `item` WHERE `id` = (?)';
+            const sql = 'DELETE FROM `item` WHERE `id` = ?';
 
             // Execute query
             await dbConnection.query(sql, [messageData.itemId]);

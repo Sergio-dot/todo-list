@@ -24,7 +24,6 @@ async function GetItems(req, res) {
 
 async function GetItemById(req, res) {
   const itemId = req.params.itemId;
-  console.log('Requested item with ID: ', itemId);
 
   try {
     // Attempt database connection
@@ -35,8 +34,6 @@ async function GetItemById(req, res) {
 
     // Execute query
     result = await connection.query(sql, [itemId]);
-    console.log('Found result: ', result);
-    console.log('Selected first result element: ', result[0]);
 
     // Close the connection
     connection.release();
@@ -82,10 +79,32 @@ async function AddItem(req, res) {
   }
 }
 
+async function UpdateItem(req, res) {
+  const itemId = req.params.itemId;
+  const newTitle = req.body.newTitle;
+  const newDescription = req.body.newDescription;
+
+  try {
+    // Create message object for RabbitMQ
+    const message = {
+      action: 'update_item',
+      itemId: itemId,
+      title: newTitle,
+      description: newDescription,
+    };
+
+    // Publish message to RabbitMQ
+    await producer.publishUpdateToQueue(message);
+
+    res.redirect('/v1/user/');
+  } catch (error) {
+    console.log('Error while updating item: ', error);
+    res.redirect('/v1/user/');
+  }
+}
+
 async function DeleteItem(req, res) {
   const itemId = req.params.itemId;
-
-  console.log('Requested deletion for object with ID: ', itemId);
 
   try {
     // Create message object for RabbitMQ
@@ -97,7 +116,6 @@ async function DeleteItem(req, res) {
     // Publish message to RabbitMQ
     await producer.publishDeleteToQueue(message);
 
-    console.log('Item deleted successfully');
     res
       .status(200)
       .json({ message: 'Item deleted successfully', redirectTo: '/v1/user' });
@@ -144,6 +162,7 @@ module.exports = {
   GetItems,
   GetItemById,
   AddItem,
+  UpdateItem,
   DeleteItem,
   MarkItem,
 };

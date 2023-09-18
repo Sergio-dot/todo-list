@@ -13,5 +13,6 @@ route.post('/add', item_controller.AddItem);
 route.delete('/delete/:itemId', item_controller.DeleteItem);
 route.post('/mark/:itemId', item_controller.MarkItem);
 route.get('/edit/:itemId', item_controller.GetItemById);
+route.post('/edit/:itemId', item_controller.UpdateItem);
 
 module.exports = route;
