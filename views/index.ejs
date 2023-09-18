@@ -78,12 +78,9 @@
                 </div>
               </div>
               <div class="btn-group">
-                <!-- <button
-                  onclick="editItem('<%= item.id %>')"
-                  class="btn btn-info"
+                <a href="/v1/user/edit/<%= item.id %>" class="btn btn-info"
+                  >Edit</a
                 >
-                  Edit
-                </button> -->
                 <button
                   onclick="deleteItem('<%= item.id %>')"
                   class="btn btn-danger"
@@ -132,22 +129,6 @@
           });
         });
       });
-
-      // Handles editing an Item
-      function editItem(itemId) {
-        // Send an AJAX request to edit the item
-        $.ajax({
-          type: 'GET',
-          url: `/v1/user/edit/${itemId}`,
-          success: function (response) {
-            // Handle server's response
-            console.log('OK!');
-            /* if (response.redirectTo) {
-              window.location.href = response.redirectTo;
-            } */
-          },
-        });
-      }
 
       // Handles deleting an Item
       function deleteItem(itemId) {

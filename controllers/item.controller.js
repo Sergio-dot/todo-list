@@ -41,12 +41,7 @@ async function GetItemById(req, res) {
     // Close the connection
     connection.release();
 
-    res.render('edit', { item: result[0], layout: false });
-    /*     res.status(200).json({
-      message: 'Found item with provided ID',
-      item: result[0],
-      redirectTo: '/v1/user/edit',
-    }); */
+    res.render('edit', { item: result[0] });
   } catch (error) {
     res.status(401).json({
       message: 'Error while searching for item',
