@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "npx cypress run",
     "start-app": "node src/app.js",
     "start-consumer": "node ./rabbit/item.consumer.js",
     "start": "npm-run-all -p start-app start-consumer"
