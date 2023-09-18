@@ -10,12 +10,9 @@ Project built using:
 - MariaDB
 - Redis
 
-## Message Queuing
+## Other tools
 
 - RabbitMQ
-
-## Testing
-
 - Cypress
 
 ## Future works
