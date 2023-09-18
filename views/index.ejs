@@ -35,7 +35,9 @@
         <h2>Add New Todo Item</h2>
         <form action="/v1/user/add" method="post" class="mb-4">
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
+            <label for="title" class="form-label"
+              >Title <span style="color: red">*</span></label
+            >
             <input
               type="text"
               name="title"
@@ -46,7 +48,7 @@
           </div>
           <div class="mb-3">
             <label for="description" class="form-label"
-              >Description (optional)</label
+              >Description <span style="color: gray">(optional)</span></label
             >
             <input
               type="text"
@@ -71,19 +73,30 @@
                   class="<%= item.completed ? 'text-success' : 'text-danger' %>"
                   ><%= item.completed ? 'Completed' : 'Pending' %></span
                 >
-                <!-- Display the description -->
                 <div class="item-description">
                   Description: <%= item.description %>
                 </div>
               </div>
               <div class="btn-group">
-                <a href="/edit/<%= item.id %>" class="btn btn-warning">Edit</a>
-                <a href="/delete/<%= item.id %>" class="btn btn-danger"
-                  >Delete</a
+                <!-- <button
+                  onclick="editItem('<%= item.id %>')"
+                  class="btn btn-info"
                 >
-                <a href="/complete/<%= item.id %>" class="btn btn-success"
-                  ><%= item.completed ? 'Unmark' : 'Mark' %></a
+                  Edit
+                </button> -->
+                <button
+                  onclick="deleteItem('<%= item.id %>')"
+                  class="btn btn-danger"
                 >
+                  Delete
+                </button>
+                <button
+                  style="width: 83px"
+                  onclick="toggleCompletion('<%= item.id %>', '<%= item.completed %>')"
+                  class="<%= item.completed ? 'btn btn-warning' : 'btn btn-success' %>"
+                >
+                  <%= item.completed == 1 ? 'Unmark' : 'Mark' %>
+                </button>
               </div>
             </div>
           </li>
@@ -94,7 +107,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-      // JavaScript to handle the form submission
+      // Handles new Item creation
       $(document).ready(function () {
         $('form').submit(function (event) {
           event.preventDefault(); // Prevent the default form submission
@@ -119,6 +132,56 @@
           });
         });
       });
+
+      // Handles editing an Item
+      function editItem(itemId) {
+        // Send an AJAX request to edit the item
+        $.ajax({
+          type: 'GET',
+          url: `/v1/user/edit/${itemId}`,
+          success: function (response) {
+            // Handle server's response
+            console.log('OK!');
+            /* if (response.redirectTo) {
+              window.location.href = response.redirectTo;
+            } */
+          },
+        });
+      }
+
+      // Handles deleting an Item
+      function deleteItem(itemId) {
+        // Send an AJAX request to delete the item
+        $.ajax({
+          type: 'DELETE',
+          url: `/v1/user/delete/${itemId}`,
+          success: function (response) {
+            // Handle the server's response
+            if (response.redirectTo) {
+              window.location.href = response.redirectTo;
+            }
+          },
+        });
+      }
+
+      // Handles marking/unmarking Item as completed
+      function toggleCompletion(itemId, completed) {
+        const action = completed == 0 ? 'mark' : 'unmark';
+
+        // Send an AJAX request to update the completion status
+        $.ajax({
+          type: 'POST',
+          url: `/v1/user/mark/${itemId}?action=${action}`,
+          success: function (response) {
+            // Handle the server's response, if needed
+            console.log(response);
+            if (response.redirectTo) {
+              // Redirect to the specified URL
+              window.location.href = response.redirectTo;
+            }
+          },
+        });
+      }
     </script>
 
     <script

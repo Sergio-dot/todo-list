@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Todo</title>
+  </head>
+  <body>
+    <h1>Edit Todo</h1>
+    <form action="/edit/<%= item.id %>" method="post">
+      <label for="newTitle">Title <span style="color: red">*</span></label>
+      <input
+        type="text"
+        id="newTitle"
+        name="newTitle"
+        value="<%= item.title %>"
+        required
+      />
+      <label for="newDescription"
+        >Description <span style="color: gray">(optional)</span></label
+      >
+      <input
+        type="text"
+        id="newDescription"
+        name="newDescription"
+        value="<%= item.description %>"
+      />
+      <button type="submit">Update</button>
+    </form>
+    <a href="/">Back to Home</a>
+  </body>
+</html>

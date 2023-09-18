@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('../modules/db.module');
 const User = require('../models/user.model');
+const path = require('path');
 
 const port = process.env.SERVER_PORT || 4001;
 
@@ -12,6 +13,7 @@ const app = express();
 
 // View engine
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '../views'));
 
 // Middlewares
 app.use(express.json());

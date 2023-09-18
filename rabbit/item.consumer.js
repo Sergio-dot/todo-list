@@ -2,7 +2,7 @@ const amqp = require('amqplib');
 const Item = require('../models/item.model');
 const pool = require('../modules/db.module');
 
-async function consumeItems() {
+async function consumeNewItems() {
   const queueName = 'itemQueue';
 
   try {
@@ -21,27 +21,87 @@ async function consumeItems() {
     // Message handler
     channel.consume(queueName, async (message) => {
       if (message !== null) {
-        const itemData = JSON.parse(message.content.toString());
-        const item = new Item(itemData.item.title, itemData.item.description);
+        const messageData = JSON.parse(message.content.toString());
 
-        console.log('Received item: ', item);
-        // Process the received item, saving it to database
-        try {
-          // Establish connection with MariaDB
-          const dbConnection = await pool.getConnection();
+        // If message requests to create a new item
+        if (messageData.action === 'add_item') {
+          const item = new Item(
+            messageData.item.title,
+            messageData.item.description,
+            messageData.item.completed
+          );
 
-          // Prepare query statement
-          const sql = 'INSERT INTO `item` (title, description) VALUES (?, ?)';
+          console.log('Received item: ', item);
+          // Process the received item, saving it to database
+          try {
+            // Establish connection with MariaDB
+            const dbConnection = await pool.getConnection();
 
-          // Execute query
-          await dbConnection.query(sql, [item.title, item.description]);
+            // Prepare query statement
+            const sql =
+              'INSERT INTO `item` (title, description, completed) VALUES (?, ?, ?)';
 
-          // Close database connection
-          dbConnection.release();
-        } catch (error) {
-          console.log('Error while writing item to database: ', error);
+            // Execute query
+            await dbConnection.query(sql, [
+              item.title,
+              item.description,
+              item.completed,
+            ]);
+
+            // Close database connection
+            dbConnection.release();
+          } catch (error) {
+            console.log('Error while writing item to database: ', error);
+          }
+        } else if (messageData.action === 'delete_item') {
+          try {
+            // Establish connection with MariaDB
+            const dbConnection = await pool.getConnection();
+
+            // Prepare query statement
+            const sql = 'DELETE FROM `item` WHERE `id` = (?)';
+
+            // Execute query
+            await dbConnection.query(sql, [messageData.itemId]);
+
+            // Close database connection
+            dbConnection.release();
+          } catch (error) {
+            console.log('Error while updating item completed status: ', error);
+          }
+        } else if (messageData.action === 'mark') {
+          try {
+            // Establish connection with MariaDB
+            const dbConnection = await pool.getConnection();
+
+            // Prepare query statement
+            const sql = "UPDATE `item` SET completed='1' WHERE `id`=(?)";
+
+            // Execute query
+            await dbConnection.query(sql, [messageData.itemId]);
+
+            // Close database connection
+            dbConnection.release();
+          } catch (error) {
+            console.log('Error while updating item completed status: ', error);
+          }
+        } else if (messageData.action === 'unmark') {
+          try {
+            // Establish connection with MariaDB
+            const dbConnection = await pool.getConnection();
+
+            // Prepare query statement
+            const sql = "UPDATE `item` SET completed='0' WHERE `id`=(?)";
+
+            // Execute query
+            await dbConnection.query(sql, [messageData.itemId]);
+
+            // Close database connection
+            dbConnection.release();
+          } catch (error) {
+            console.log('Error while updating item completed status: ', error);
+          }
         }
-
         channel.ack(message);
       }
     });
@@ -50,6 +110,7 @@ async function consumeItems() {
   }
 }
 
-// Start the item consumer
-consumeItems();
-console.log(' [*] RabbitMQ Consumer started');
+// Start the consumers
+if (consumeNewItems()) {
+  console.log(' [*] RabbitMQ consumers started');
+}

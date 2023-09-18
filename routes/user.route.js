@@ -10,5 +10,8 @@ route.get('/dashboard', auth_middleware.verifyToken, (req, res) => {
 
 route.get('/', item_controller.GetItems);
 route.post('/add', item_controller.AddItem);
+route.delete('/delete/:itemId', item_controller.DeleteItem);
+route.post('/mark/:itemId', item_controller.MarkItem);
+route.get('/edit/:itemId', item_controller.GetItemById);
 
 module.exports = route;
