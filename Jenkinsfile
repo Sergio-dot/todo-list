@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
+        timestamps()
+    }
+
     stages {
         stage('Install dependencies') {
             steps {
@@ -17,6 +22,21 @@ pipeline {
                 echo ' [*] Done'
             }
         }
+
+        stage('Build and Push Docker Image') {
+            steps {
+                echo ' [-] Building and pushing Docker image...'
+                withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    sh '''
+                        docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
+                        docker build -t sergiodot/todo-app:latest .
+                        docker push sergiodot/todo-app:latest
+                    '''
+                }
+                echo ' [*] Docker image built and pushed'
+            }
+        }
+
     }
 
     post {
