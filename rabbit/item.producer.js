@@ -1,12 +1,14 @@
 require('dotenv').config();
 const amqp = require('amqplib');
 
+const url = process.env.RABBITMQ_URL || 'amqp://rabbitmq:5672';
+
 async function publishItemToQueue(item) {
   const queueName = 'itemQueue';
 
   try {
     // Establish connection with RabbitMQ
-    const connection = await amqp.connect('amqp://rabbitmq:5672');
+    const connection = await amqp.connect(url);
 
     // Create channel
     const channel = await connection.createChannel();
@@ -31,7 +33,7 @@ async function publishUpdateToQueue(message) {
 
   try {
     // Establish connection with RabbitMQ
-    const connection = await amqp.connect('amqp://rabbitmq:5672');
+    const connection = await amqp.connect(url);
 
     // Create channel
     const channel = await connection.createChannel();
@@ -56,7 +58,7 @@ async function publishDeleteToQueue(message) {
 
   try {
     // Establish connection with RabbitMQ
-    const connection = await amqp.connect('amqp://rabbitmq:5672');
+    const connection = await amqp.connect(url);
 
     // Create channel
     const channel = await connection.createChannel();
@@ -81,7 +83,7 @@ async function publishMarkToQueue(message) {
 
   try {
     // Establish connection with RabbitMQ
-    const connection = await amqp.connect('amqp://rabbitmq:5672');
+    const connection = await amqp.connect(url);
 
     // Create channel
     const channel = await connection.createChannel();

@@ -9,7 +9,7 @@ async function consumeNewItems() {
 
   try {
     // Establish connection with RabbitMQ
-    const connection = await amqp.connect('amqp://rabbitmq:5672');
+    const connection = await amqp.connect(url);
 
     // Create channel
     const channel = await connection.createChannel();
