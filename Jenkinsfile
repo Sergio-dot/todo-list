@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo ' [-] Installing dependencies...'
                 sh 'npm install'
-                echo ' [*] Done'
+                echo ' [*] Dependencies installed'
             }
         }
 
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo ' [-] Performing tests...'
                 sh 'npm test'
-                echo ' [*] Done'
+                echo ' [*] Tests passed'
             }
         }
 
@@ -31,10 +31,22 @@ pipeline {
                         docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
                         docker build -t sergiodot/todo-app:1.0 .
                         docker push sergiodot/todo-app:1.0
-                        docker image prune
                     '''
                 }
                 echo ' [*] Docker image built and pushed'
+            }
+        }
+
+        stage('Restart Docker environment') {
+            steps {
+                echo ' [-] Turning off services...'
+                sh 'docker compose down'
+                echo ' [-] Cleaning docker images...'
+                sh 'docker image prune -f'
+                echo ' [-] Restarting containers...'
+                sh 'docker compose up -d'
+                sh 'docker compose restart todo-app'
+                echo ' [*] Environment is ready'
             }
         }
 
