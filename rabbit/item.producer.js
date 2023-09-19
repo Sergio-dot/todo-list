@@ -1,7 +1,7 @@
 require('dotenv').config();
 const amqp = require('amqplib');
 
-const url = process.env.RABBITMQ_URL || 'amqp://rabbitmq:5672';
+const url = process.env.RABBITMQ_URL;
 
 async function publishItemToQueue(item) {
   const queueName = 'itemQueue';
