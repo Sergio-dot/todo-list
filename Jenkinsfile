@@ -36,20 +36,6 @@ pipeline {
                 echo ' [*] Docker image built and pushed'
             }
         }
-
-        stage('Restart Docker environment') {
-            steps {
-                echo ' [-] Turning off services...'
-                sh 'docker compose down'
-                echo ' [-] Cleaning docker images...'
-                sh 'docker image prune -f'
-                echo ' [-] Restarting containers...'
-                sh 'docker compose up -d'
-                sh 'docker compose restart todo-app'
-                echo ' [*] Environment is ready'
-            }
-        }
-
     }
 
     post {
