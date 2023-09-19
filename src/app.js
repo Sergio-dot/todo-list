@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-const port = process.env.SERVER_PORT || 4001;
+const port = process.env.SERVER_PORT || 3000;
 
 // Init express
 const app = express();
