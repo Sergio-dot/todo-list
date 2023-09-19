@@ -29,8 +29,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
                     sh '''
                         docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
-                        docker build -t sergiodot/todo-app:latest .
-                        docker push sergiodot/todo-app:latest
+                        docker build -t sergiodot/todo-app:1.0 .
+                        docker push sergiodot/todo-app:1.0
                     '''
                 }
                 echo ' [*] Docker image built and pushed'
