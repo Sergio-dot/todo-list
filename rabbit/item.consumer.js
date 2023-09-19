@@ -2,6 +2,8 @@ const amqp = require('amqplib');
 const Item = require('../models/item.model');
 const pool = require('../modules/db.module');
 
+const url = process.env.RABBITMQ_URL || 'amqp://rabbitmq:5672';
+
 async function consumeNewItems() {
   const queueName = 'itemQueue';
 
