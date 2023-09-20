@@ -28,7 +28,6 @@ app.use(express.json());
 // Routes
 const user_routes = require('../routes/user.route');
 
-app.use('/v1/auth', auth_routes);
 app.use('/v1/user', user_routes);
 
 app.get('/', (req, res) => {
