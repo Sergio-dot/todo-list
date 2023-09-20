@@ -5,15 +5,6 @@ const path = require('path');
 
 const port = process.env.SERVER_PORT || 3000;
 
-console.log(' -> ', process.env.SERVER_PORT);
-console.log(' -> ', process.env.MYSQL_HOST);
-console.log(' -> ', process.env.MYSQL_ROOT_PASSWORD);
-console.log(' -> ', process.env.MYSQL_DATABASE);
-console.log(' -> ', process.env.MYSQL_USER);
-console.log(' -> ', process.env.MYSQL_PASSWORD);
-console.log(' -> ', process.env.REDIS_URL);
-console.log(' -> ', process.env.RABBITMQ_URL);
-
 // Init express
 const app = express();
 
