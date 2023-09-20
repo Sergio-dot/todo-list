@@ -1,7 +1,6 @@
 //Modules
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
 const path = require('path');
 
 const port = process.env.SERVER_PORT || 3000;
@@ -25,10 +24,8 @@ app.set('views', path.join(__dirname, '../views'));
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
 
 // Routes
-const auth_routes = require('../routes/auth.route');
 const user_routes = require('../routes/user.route');
 
 app.use('/v1/auth', auth_routes);
