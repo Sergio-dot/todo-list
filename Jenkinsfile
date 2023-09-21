@@ -43,8 +43,10 @@ pipeline {
         success {
             script {
                 def buildNumber = currentBuild.number
+                def green = "#00FF00"
+                
                 echo " [*] Pipeline executed without errors (Build #${buildNumber})"
-                slackSend channel: '#development', message: "Build #${buildNumber} succeeded", tokenCredentialId: 'slack-todo-app'
+                slackSend channel: '#development', message: "Build *#${buildNumber}* succeeded", tokenCredentialId: 'slack-todo-app', color: green
             }
         }
         failure {
