@@ -25,16 +25,22 @@ pipeline {
 
         stage('Build and Push Docker Image') {
             steps {
-                echo ' [-] Building and pushing Docker image...'
-                withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                    sh '''
-                        docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
-                        ls
-                        docker build -t sergiodot/todo-app:1.0 .
-                        docker push sergiodot/todo-app:1.0
-                    '''
+                script {
+                    def appVersion = "v1.0.0"
+                    def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                    def dockerImageTag = "${appVersion}-${commitHash}"
+
+                    echo " [-] Building and pushing Docker image with tag: ${dockerImageTag}"
+
+                    withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh '''
+                            docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
+                            docker build -t sergiodot/todo-app:${dockerImageTag} .
+                            docker push sergiodot/todo-app:${dockerImageTag}
+                        '''
+                    }
+                    echo " [*] Docker image built and pushed with tag: ${dockerImageTag}"
                 }
-                echo ' [*] Docker image built and pushed'
             }
         }
     }
