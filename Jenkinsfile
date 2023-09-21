@@ -54,7 +54,13 @@ pipeline {
             }
         }
         failure {
-            echo ' [!] Error while executing pipeline, check the logs'
+            script {
+                def buildNumber = currentBuild.number
+                def red = "#FA0202"
+
+                echo ' [!] Error while executing pipeline, check the logs'
+                slackSend channel: '#development', message: "Build *#${buildNumber}* failed", tokenCredentialId: 'slack-todo-app', color: red
+            }
         }
     }
 }
