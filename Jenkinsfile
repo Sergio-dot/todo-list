@@ -1,6 +1,8 @@
 pipeline {
     agent any
 
+    def dockerImageTag // Dynamic-generated Docker image tag
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
         timestamps()
@@ -28,7 +30,7 @@ pipeline {
                 script {
                     def appVersion = "v1.0.0"
                     def commitHash = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-                    def dockerImageTag = "${appVersion}-${commitHash}"
+                    dockerImageTag = "${appVersion}-${commitHash}"
 
                     echo " [-] Building and pushing Docker image with tag: ${dockerImageTag}"
 
