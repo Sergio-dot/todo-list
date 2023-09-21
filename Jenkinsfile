@@ -41,9 +41,11 @@ pipeline {
 
     post {
         success {
-            def buildNumber = currentBuild.number
-            echo ' [*] Pipeline executed without errors'
-            slackSend channel: '#development', message: 'Build #${buildNumber} succeeded', tokenCredentialId: 'slack-todo-app'
+            script{
+                def buildNumber = currentBuild.number
+                echo ' [*] Pipeline executed without errors'
+                slackSend channel: '#development', message: 'Build #${buildNumber} succeeded', tokenCredentialId: 'slack-todo-app'
+            }
         }
         failure {
             echo ' [!] Error while executing pipeline, check the logs'
