@@ -33,11 +33,9 @@ pipeline {
                     echo " [-] Building and pushing Docker image with tag: ${dockerImageTag}"
 
                     withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                        sh '''
-                            docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD"
-                            docker build -t sergiodot/todo-app:"${dockerImageTag}" .
-                            docker push sergiodot/todo-app:"${dockerImageTag}"
-                        '''
+                        sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD"
+                        sh "docker build -t sergiodot/todo-app:${dockerImageTag} ."
+                        sh "docker push sergiodot/todo-app:${dockerImageTag}"
                     }
                     echo " [*] Docker image built and pushed with tag: ${dockerImageTag}"
                 }
