@@ -1,7 +1,9 @@
 pipeline {
     agent any
 
-    def dockerImageTag = "" // Dynamic-generated Docker image tag
+    environment {
+        def dockerImageTag = "" // Dynamic-generated Docker image tag
+    }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
