@@ -50,7 +50,7 @@ pipeline {
                 def green = "#00FF00"
                 
                 echo " [*] Pipeline executed without errors (Build #${buildNumber})"
-                slackSend channel: '#development', message: "Build *#${buildNumber}* succeeded", tokenCredentialId: 'slack-todo-app', color: green
+                slackSend channel: '#development', message: "Build *#${buildNumber}* succeeded - Image published with tag: ${dockerImageTag}", tokenCredentialId: 'slack-todo-app', color: green
             }
         }
         failure {
