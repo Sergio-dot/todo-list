@@ -8,7 +8,6 @@ Project built using:
 ## Database
 
 - MariaDB
-- Redis
 
 ## Message Queuing
 
