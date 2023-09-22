@@ -63,7 +63,7 @@ pipeline {
                 def red = "#FA0202"
 
                 echo ' [!] Error while executing pipeline, check the logs'
-                slackSend channel: '#development', message: "Build *#${buildNumber}* failed", tokenCredentialId: 'slack-todo-app', color: red
+                slackSend channel: '#development', message: "Build *#${buildNumber}* failed... Check Console Output in Jenkins", tokenCredentialId: 'slack-todo-app', color: red
             }
         }
     }
